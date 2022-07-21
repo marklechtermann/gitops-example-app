@@ -16,6 +16,7 @@
 
   <PropertyGroup>
     <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerVerbosity>n</MinVerVerbosity>
   </PropertyGroup>
 
 </Project>

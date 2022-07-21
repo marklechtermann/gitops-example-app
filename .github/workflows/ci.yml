@@ -2,26 +2,32 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
-      - name: Docker Login
-        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
-      - name: Docker Build
-        run: |
-          docker build --build-arg GITHUB_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:latest .
-      - name: Docker Push
-        run: |
-          docker push marklechtermann/gitops-example-app:latest 
-      - name: Docker Logout
-        if: always()
-        run: docker logout
+      - name: Setup .NET Core SDK 6.0
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0
+      - name: Setup minver
+        run: dotnet new tool-manifest && dotnet tool install --local minver-cli
+      - name: Get version
+        run: dotnet minver -t v "-d ${GITHUB_REF#refs/heads/}")
+      # - name: Docker Login
+      #   run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
+      # - name: Docker Build
+      #   run: |
+      #     docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:latest .
+      # - name: Docker Push
+      #   run: |
+      #     docker push marklechtermann/gitops-example-app:latest
+      # - name: Docker Logout
+      #   if: always()
+      #   run: docker logout

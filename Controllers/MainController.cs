@@ -10,11 +10,17 @@ public class MainController : ControllerBase
     public Info GetVersion()
     {
         var informationalVersion = typeof(MainController).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-        return new Info() { Version = informationalVersion?.InformationalVersion };
+        var git_sha = Environment.GetEnvironmentVariable("GIT_SHA");
+        return new Info()
+        {
+            Version = informationalVersion?.InformationalVersion,
+            GitSHA = git_sha
+        };
     }
 }
 
 public class Info
 {
     public string? Version { get; set; }
+    public string? GitSHA { get; set; }
 }
