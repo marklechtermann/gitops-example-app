@@ -7,6 +7,8 @@ on:
       - dev
     paths-ignore:
       - "**/README.md"
+    tags:
+      - "v.*.*.*"
   workflow_dispatch:
 
 jobs:
@@ -23,6 +25,9 @@ jobs:
           dotnet-version: 6.0.*
       - name: Setup minver
         run: dotnet new tool-manifest && dotnet tool install --local minver-cli
+      - name: Check if Tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo xxxnewtagxxx
       - name: Get version
         run: echo "docker_tag=$(dotnet minver -t v --default-pre-release-phase ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       - name: Docker Login
