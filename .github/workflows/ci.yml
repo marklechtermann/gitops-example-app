@@ -2,9 +2,13 @@ name: Docker Image CI
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches:
+      - main
+      - dev
+    paths-ignore:
+      - "**/README.md"
+      - ".github/**"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Setup .NET Core SDK 6.0.*
         uses: actions/setup-dotnet@v2
         with:
@@ -19,15 +25,19 @@ jobs:
       - name: Setup minver
         run: dotnet new tool-manifest && dotnet tool install --local minver-cli
       - name: Get version
-        run: dotnet minver -t v "-d ${GITHUB_REF#refs/heads/}")
-      # - name: Docker Login
-      #   run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
+        run: echo "docker_tag=$(dotnet minver -t v --default-pre-release-phase ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+      - name: Docker Login
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
+      - name: Docker Login
+        run: echo "${{ env.docker_tag }}"
       # - name: Docker Build
       #   run: |
       #     docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:latest .
       # - name: Docker Push
       #   run: |
       #     docker push marklechtermann/gitops-example-app:latest
-      # - name: Docker Logout
-      #   if: always()
-      #   run: docker logout
+      - name: Docker Logout
+        if: always()
+        run: docker logout
+
+        #
