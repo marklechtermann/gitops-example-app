@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image Release
 
 on:
   push:
@@ -13,5 +13,22 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: release
-        run: echo test
+      - name: Setup .NET Core SDK 6.0.*
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.*
+      - name: Setup minver
+        run: dotnet new tool-manifest && dotnet tool install --local minver-cli
+      - name: Get version
+        run: echo "docker_tag=$(dotnet minver -t v" >> $GITHUB_ENV
+      - name: Docker Login
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
+      - name: Docker Build
+        run: docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:${{ env.docker_tag }} -t marklechtermann/gitops-example-app:latest .
+      - name: Docker Push
+        run: docker push marklechtermann/gitops-example-app:latest
+      - name: Docker Push with version
+        run: docker push marklechtermann/gitops-example-app:${{ env.docker_tag }}
+      - name: Docker Logout
+        if: always()
+        run: docker logout
