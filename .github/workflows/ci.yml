@@ -19,7 +19,7 @@ jobs:
       - name: Setup minver
         run: dotnet new tool-manifest && dotnet tool install --local minver-cli
       - name: Get version
-        run: dotnet minver -t v "-d ${GITHUB_REF#refs/heads/}")
+        run: dotnet minver -t v "-d ${GITHUB_REF#refs/heads/}"
       # - name: Docker Login
       #   run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
       # - name: Docker Build
