@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Docker Login
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
+      - name: Docker Build
+        run: |
+          docker build --build-arg GITHUB_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:latest .
+      - name: Docker Push
+        run: |
+          docker push marklechtermann/gitops-example-app:latest 
+      - name: Docker Logout
+        if: always()
+        run: docker logout
