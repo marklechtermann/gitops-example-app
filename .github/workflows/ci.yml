@@ -7,7 +7,6 @@ on:
       - dev
     paths-ignore:
       - "**/README.md"
-      - ".github/**"
 
 jobs:
   build:
