@@ -28,11 +28,9 @@ jobs:
         run: echo "docker_tag=$(dotnet minver -t v --default-pre-release-phase ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       - name: Docker Login
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
-      - name: Docker Login
-        run: echo "${{ env.docker_tag }}"
-      # - name: Docker Build
-      #   run: |
-      #     docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:latest .
+      - name: Docker Build
+        run: |
+          docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:${{ env.docker_tag }} .
       # - name: Docker Push
       #   run: |
       #     docker push marklechtermann/gitops-example-app:latest
