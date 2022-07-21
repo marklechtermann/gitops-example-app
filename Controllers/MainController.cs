@@ -14,7 +14,7 @@ public class MainController : ControllerBase
         return new Info()
         {
             Version = informationalVersion?.InformationalVersion,
-            GitSHA = git_sha
+            GitSHA = git_sha,
             Description = "Hello"
         };
     }
