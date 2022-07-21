@@ -5,10 +5,7 @@ WORKDIR /app
 COPY *.csproj ./
 RUN dotnet restore
 
-COPY Controllers ./
-COPY Properties ./
-COPY appsettings.json ./
-COPY Program.cs ./
+COPY . ./
 
 RUN dotnet publish -c Release -o out
 
