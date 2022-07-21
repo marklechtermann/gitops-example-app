@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Setup .NET Core SDK 6.0.*
         uses: actions/setup-dotnet@v2
         with:
