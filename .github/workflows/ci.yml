@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Setup .NET Core SDK 6.0
+      - name: Setup .NET Core SDK 6.0.*
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0
+          dotnet-version: 6.0.*
       - name: Setup minver
         run: dotnet new tool-manifest && dotnet tool install --local minver-cli
       - name: Get version
