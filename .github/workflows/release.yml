@@ -1,0 +1,17 @@
+name: Docker Image CI
+
+on:
+  push:
+    tags:
+      - "v.*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: release
+        run: echo test
