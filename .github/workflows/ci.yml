@@ -24,15 +24,17 @@ jobs:
       - name: Setup minver
         run: dotnet new tool-manifest && dotnet tool install --local minver-cli
       - name: Get version
-        run: dotnet minver -t v --default-pre-release-phase "${GITHUB_REF#refs/heads/}"
+        run: echo "docker_tag=$(dotnet minver -t v --default-pre-release-phase ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       - name: Docker Login
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
-      - name: Docker Build
-        run: |
-          docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:latest .
-      - name: Docker Push
-        run: |
-          docker push marklechtermann/gitops-example-app:latest
+      - name: Docker Login
+        run: echo "${{ env.docker_tag }}"
+      # - name: Docker Build
+      #   run: |
+      #     docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:latest .
+      # - name: Docker Push
+      #   run: |
+      #     docker push marklechtermann/gitops-example-app:latest
       - name: Docker Logout
         if: always()
         run: docker logout
