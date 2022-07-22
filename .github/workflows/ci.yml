@@ -24,11 +24,11 @@ jobs:
       - name: Setup minver
         run: dotnet new tool-manifest && dotnet tool install --local minver-cli
       - name: Get version
-        run: echo "docker_tag=$(dotnet minver -t v --default-pre-release-phase ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        run: echo "docker_tag=$(MinVerDefaultPreReleasePhase=${GITHUB_REF#refs/heads/} dotnet minver -t v)" >> $GITHUB_ENV
       - name: Docker Login
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
       - name: Docker Build
-        run: docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:${{ env.docker_tag }} -t marklechtermann/gitops-example-app:${GITHUB_REF#refs/heads/} .
+        run: MinVerDefaultPreReleasePhase=${GITHUB_REF#refs/heads/} docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:${{ env.docker_tag }} -t marklechtermann/gitops-example-app:${GITHUB_REF#refs/heads/} .
       - name: Docker Push
         run: docker push marklechtermann/gitops-example-app:${GITHUB_REF#refs/heads/}
       - name: Docker Push with version
