@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 6.0.*
       - name: Setup minver
         run: dotnet new tool-manifest && dotnet tool install --local minver-cli
-      - name: Get version
+      - name: Get Docker Tag
         run: echo "docker_tag=$(dotnet minver -t v)" >> $GITHUB_ENV
       - name: Docker Login
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
