@@ -28,7 +28,7 @@ jobs:
       - name: Docker Login
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u marklechtermann --password-stdin
       - name: Docker Build
-        run: MinVerDefaultPreReleasePhase=${GITHUB_REF#refs/heads/} docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:${{ env.docker_tag }} -t marklechtermann/gitops-example-app:${GITHUB_REF#refs/heads/} .
+        run: MinVerBuildMetadata=$GITHUB_SHA MinVerDefaultPreReleasePhase=${GITHUB_REF#refs/heads/} docker build --build-arg GIT_SHA=$GITHUB_SHA -t marklechtermann/gitops-example-app:${{ env.docker_tag }} -t marklechtermann/gitops-example-app:${GITHUB_REF#refs/heads/} .
       - name: Docker Push
         run: docker push marklechtermann/gitops-example-app:${GITHUB_REF#refs/heads/}
       - name: Docker Push with version
