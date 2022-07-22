@@ -1,5 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 
+ARG MinVerBuildMetadata=""
+ENV MinVerBuildMetadata=${MinVerBuildMetadata}
+
+ARG MinVerDefaultPreReleasePhase=""
+ENV MinVerDefaultPreReleasePhase=${MinVerDefaultPreReleasePhase}
+
 WORKDIR /app
 
 COPY *.csproj ./
