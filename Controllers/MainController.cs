@@ -15,7 +15,7 @@ public class MainController : ControllerBase
         {
             Version = informationalVersion?.InformationalVersion,
             GitSHA = git_sha,
-            Description = "Hello 12345",
+            Description = "Hello 12345678",
             Secret = Environment.GetEnvironmentVariable("MYSECRET")
         };
     }
